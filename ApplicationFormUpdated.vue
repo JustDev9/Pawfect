@@ -55,7 +55,7 @@
     <div class="pet-profile-container">
       <div class="pet-card">
         <div class="pet-image-container">
-          <img src="ridley.png" alt="Ian" class="pet-image">
+          <img src="/public/ridley.png" alt="Ian" class="pet-image">
         </div>
         <div class="pet-info">
           <h2 class="pet-name">Hi! I'm Ian</h2>
