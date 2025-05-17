@@ -3,47 +3,67 @@
     <nav class="nav-container" :class="{ 'nav-scrolled': hasScrolled }">
       <div class="logo-container">
         <div class="logo-image">
-          <img src="/Designer.png" alt="Pawfect" width="40" height="40">
+          <img src="Designer.png" alt="Pawfect" width="40" height="40">
         </div>
         <span class="logo-text">PAWFECT</span>
       </div>
-
+      
       <div class="nav-links-container">
         <transition name="fade">
           <div v-if="mobileMenuOpen || !isMobile" class="nav-links" :class="{ 'mobile-active': mobileMenuOpen }">
             <a href="#" class="nav-link" @click="closeMenuIfMobile">Home</a>
             <a href="#" class="nav-link" @click="closeMenuIfMobile">Pet Profiles</a>
             <div class="dropdown">
-              <a href="#" class="nav-link dropdown-toggle" @click="toggleDropdown">
+              <a href="#" class="nav-link dropdown-toggle" @click="toggleDesktopDropdown">
                 Resources <span class="dropdown-arrow" :class="{ 'arrow-rotated': dropdownOpen }">▼</span>
               </a>
               <transition name="slide-fade">
                 <div v-if="isMobile && dropdownOpen" class="dropdown-content mobile">
                   <a href="#" @click="closeMenuIfMobile">Training Tips</a>
                   <a href="#" @click="closeMenuIfMobile">Health Guides</a>
-                  <a href="#" @click="closeMenuIfMobile">Pet Care</a>
                 </div>
               </transition>
-              <div v-if="!isMobile" class="dropdown-content desktop">
-                <a href="#">Training Tips</a>
-                <a href="#">Health Guides</a>
-                <a href="#">Pet Care</a>
-              </div>
+              <transition name="resources-dropdown">
+                <div v-if="!isMobile && desktopDropdownOpen" class="dropdown-content desktop">
+                  <a href="#">Training Tips</a>
+                  <a href="#">Health Guides</a>
+                  <a href="#">Pet Care</a>
+                </div>
+              </transition>
             </div>
             <a href="#" class="nav-link" @click="closeMenuIfMobile">Donation</a>
             <a href="#" class="nav-link" @click="closeMenuIfMobile">Contact</a>
           </div>
         </transition>
       </div>
-
+      
       <div class="right-section">
-        <div class="user-icon" role="button" aria-label="User profile" tabindex="0">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
+        <div class="user-dropdown">
+          <div class="user-icon" role="button" aria-label="User profile" tabindex="0" @click="toggleUserDropdown">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          
+          <transition name="dropdown-animation">
+            <div v-if="userDropdownOpen" class="user-dropdown-content" :class="{ 'mobile-dropdown': isMobile }">
+              <div class="dropdown-header">
+                <span>User Menu</span>
+                <button class="close-dropdown-btn" @click="closeUserDropdown" aria-label="Close menu">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+              <a href="#" @click.stop>Profile</a>
+              <a href="#" @click.stop>Status</a>
+              <a href="#" @click.stop>Log Out</a>
+            </div>
+          </transition>
         </div>
-
+        
         <button class="mobile-menu-toggle" aria-label="Toggle menu" @click="toggleMobileMenu">
           <div class="bar" :class="{ 'bar-1-active': mobileMenuOpen }"></div>
           <div class="bar" :class="{ 'bar-2-active': mobileMenuOpen }"></div>
@@ -157,11 +177,13 @@
 
 <script>
 export default {
-  name: 'PawfectHomepage',
+  name: 'NavigationBar',
   data() {
     return {
       mobileMenuOpen: false,
       dropdownOpen: false,
+      desktopDropdownOpen: false,
+      userDropdownOpen: false,
       isMobile: false,
       hasScrolled: false
     }
@@ -170,12 +192,12 @@ export default {
     this.checkScreenSize();
     window.addEventListener('resize', this.checkScreenSize);
     window.addEventListener('scroll', this.handleScroll);
-    document.addEventListener('click', this.handleClickOutsideDropdown);
+    document.addEventListener('click', this.closeDropdownsOnClickOutside);
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.checkScreenSize);
     window.removeEventListener('scroll', this.handleScroll);
-    document.removeEventListener('click', this.handleClickOutsideDropdown);
+    document.removeEventListener('click', this.closeDropdownsOnClickOutside);
   },
   methods: {
     toggleMobileMenu() {
@@ -190,6 +212,22 @@ export default {
         event.preventDefault();
         this.dropdownOpen = !this.dropdownOpen;
       }
+    },
+    toggleDesktopDropdown(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (this.isMobile) {
+        this.dropdownOpen = !this.dropdownOpen;
+      } else {
+        this.desktopDropdownOpen = !this.desktopDropdownOpen;
+      }
+    },
+    toggleUserDropdown(event) {
+      event.stopPropagation();
+      this.userDropdownOpen = !this.userDropdownOpen;
+    },
+    closeUserDropdown() {
+      this.userDropdownOpen = false;
     },
     closeMenuIfMobile() {
       if (this.isMobile) {
@@ -208,6 +246,14 @@ export default {
     },
     handleScroll() {
       this.hasScrolled = window.scrollY > 20;
+    },
+    closeDropdownsOnClickOutside(event) {
+      if (!this.isMobile && this.desktopDropdownOpen) {
+        const dropdown = document.querySelector('.dropdown');
+        if (dropdown && !dropdown.contains(event.target)) {
+          this.desktopDropdownOpen = false;
+        }
+      }
     }
   }
 }
@@ -219,7 +265,6 @@ export default {
   margin: 0;
   padding: 0;
 }
-
 .nav-container {
   display: flex;
   justify-content: space-between;
@@ -232,7 +277,6 @@ export default {
   left: 0;
   right: 0;
   width: 100%;
-  box-sizing: border-box;
   z-index: 1000;
   transition: all 0.3s ease;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -256,9 +300,6 @@ export default {
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease;
-}
-.logo-image img {
-  display: block;
 }
 
 .logo-container:hover .logo-image {
@@ -339,23 +380,19 @@ export default {
 }
 
 .dropdown-content.desktop {
-  display: none;
   position: absolute;
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
   margin-top: 0.75rem;
   background-color: white;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1001;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
 }
 
-.dropdown:hover .dropdown-content.desktop {
-  display: block;
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
+.dropdown-content.desktop-active {
+  animation: dropdownIn 0.3s ease-out forwards;
 }
 
 .dropdown-content a {
@@ -379,7 +416,6 @@ export default {
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   margin-top: 0.5rem;
-  width: 100%;
 }
 
 .dropdown-content.mobile a {
@@ -398,6 +434,10 @@ export default {
   gap: 1.5rem;
 }
 
+.user-dropdown {
+  position: relative;
+}
+
 .user-icon {
   color: white;
   cursor: pointer;
@@ -414,6 +454,146 @@ export default {
 .user-icon:hover {
   transform: scale(1.1);
   background-color: rgba(255, 255, 255, 0.3);
+}
+
+.user-dropdown-content {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background-color: white;
+  min-width: 220px;
+  max-width: 90vw;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 1001;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dropdown-header span {
+  font-weight: 600;
+  color: #333;
+}
+
+.close-dropdown-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.close-dropdown-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+.user-dropdown-content a {
+  color: #333;
+  padding: 0.9rem 1.2rem;
+  text-decoration: none;
+  display: block;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.user-dropdown-content a:last-child {
+  border-bottom: none;
+}
+
+.user-dropdown-content a:hover {
+  background-color: #f8f8f8;
+  padding-left: 1.5rem;
+}
+
+/* Removed positioning changes for mobile */
+.user-dropdown-content.mobile-dropdown {
+  position: absolute;
+  width: auto;
+  min-width: 220px;
+  max-width: 90vw;
+}
+
+.dropdown-animation-enter-active {
+  animation: dropdownIn 0.3s ease-out forwards;
+}
+
+.dropdown-animation-leave-active {
+  animation: dropdownOut 0.3s ease-in forwards;
+}
+
+@keyframes dropdownIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdownOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.resources-dropdown-enter-active {
+  animation: dropdownResourcesIn 0.3s ease-out forwards;
+}
+
+.resources-dropdown-leave-active {
+  animation: dropdownResourcesOut 0.3s ease-in forwards;
+}
+
+@keyframes dropdownResourcesIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) translateX(-50%);
+  }
+  60% {
+    transform: translateY(5px) translateX(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+}
+
+@keyframes dropdownResourcesOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) translateX(-50%);
+  }
 }
 
 .mobile-menu-toggle {
@@ -440,29 +620,29 @@ export default {
 .bar-1-active {
   transform: translateY(8px) rotate(45deg);
 }
+
 .bar-2-active {
   opacity: 0;
 }
+
 .bar-3-active {
   transform: translateY(-8px) rotate(-45deg);
 }
 
-.fade-enter-active,
-.fade-leave-active {
+.fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s ease;
 }
-.fade-enter-from,
-.fade-leave-to {
+
+.fade-enter-from, .fade-leave-to {
   opacity: 0;
 }
 
-.slide-fade-enter-active,
-.slide-fade-leave-active {
+.slide-fade-enter-active, .slide-fade-leave-active {
   transition: all 0.3s ease;
 }
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateY(-10px);
+
+.slide-fade-enter-from, .slide-fade-leave-to {
+  transform: translateY(-20px);
   opacity: 0;
 }
 
@@ -476,23 +656,25 @@ export default {
   .nav-container {
     padding: 0.75rem 1.25rem;
   }
+  
   .logo-text {
     font-size: 1.5rem;
   }
+  
   .mobile-menu-toggle {
     display: flex;
   }
+  
   .nav-links-container {
     position: static;
   }
+  
   .nav-links {
     position: fixed;
     top: 0;
-    left: -100%;
-    right: auto;
+    left: 0;
+    right: 0;
     bottom: 0;
-    width: 80%;
-    max-width: 300px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -500,33 +682,32 @@ export default {
     padding: 2rem;
     gap: 1.5rem;
     z-index: 5;
-    transition: left 0.3s ease-in-out;
+    transition: all 0.3s ease;
     overflow-y: auto;
     padding-top: 5rem;
+    width: 100vw;
+    margin: 0;
   }
-  .nav-links.mobile-active {
-    left: 0;
+  
+  .mobile-active {
+    animation: slideIn 0.3s forwards;
   }
+  
   .nav-link {
     font-size: 1.3rem;
-    width: 100%;
-    text-align: center;
   }
+  
   .nav-link:after {
     height: 3px;
-    left: 50%;
-    transform: translateX(-50%);
   }
-   .nav-link:hover:after {
-    width: 50%;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
   }
-  .dropdown .nav-link {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .dropdown-content.desktop {
-    display: none !important;
+  100% {
+    transform: translateX(0);
   }
 }
 
@@ -534,16 +715,57 @@ export default {
   .nav-container {
     padding: 0.75rem 1rem;
   }
+  
   .logo-text {
     font-size: 1.3rem;
   }
+  
   .user-icon {
     width: 32px;
     height: 32px;
   }
+  
   .nav-links {
     padding: 1.5rem;
     gap: 1.25rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .nav-container {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .logo-text {
+    font-size: 1.1rem;
+  }
+  
+  .right-section {
+    gap: 0.75rem;
+  }
+  
+  .user-dropdown-content {
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 245px) {
+  .logo-text {
+    font-size: 0.9rem;
+  }
+  
+  .user-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .nav-container {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .user-dropdown-content {
+    min-width: 180px;
+    right: -20px; 
   }
 }
 
@@ -948,5 +1170,4 @@ export default {
     max-height: 380px;
   }
 }
-
 </style>
