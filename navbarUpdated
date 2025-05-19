@@ -58,7 +58,7 @@
                 </button>
               </div>
               <a href="#" @click.stop>Profile</a>
-              <a href="#" @click.stop>Status</a>
+              <a href="C:\Users\Ian\Desktop\login-sigup\src\components\Training.vue" @click.stop>Status</a>
               <a href="#" @click.stop>Log Out</a>
             </div>
           </transition>
