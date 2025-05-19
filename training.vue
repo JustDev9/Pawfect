@@ -7,42 +7,61 @@
         </div>
         <span class="logo-text">PAWFECT</span>
       </div>
-      
-      <div class="nav-links-container">
-        <transition name="fade">
-          <div v-if="mobileMenuOpen || !isMobile" class="nav-links" :class="{ 'mobile-active': mobileMenuOpen }">
-            <a href="#" class="nav-link" @click="closeMenuIfMobile">Home</a>
-            <a href="#" class="nav-link" @click="closeMenuIfMobile">Pet Profiles</a>
-            <div class="dropdown">
-              <a href="#" class="nav-link dropdown-toggle" @click="toggleDropdown">
-                Resources <span class="dropdown-arrow" :class="{ 'arrow-rotated': dropdownOpen }">▼</span>
-              </a>
-              <transition name="slide-fade">
-                <div v-if="isMobile && dropdownOpen" class="dropdown-content mobile">
-                  <a href="#" @click="closeMenuIfMobile">Training Tips</a>
-                  <a href="#" @click="closeMenuIfMobile">Health Guides</a>
-                </div>
-              </transition>
-              <div v-if="!isMobile" class="dropdown-content desktop">
+
+      <div class="nav-links-container" :class="{ 'mobile-nav-active': mobileMenuOpen }">
+        <div class="nav-links">
+          <a href="#" class="nav-link" @click="closeMenuIfMobile">Home</a>
+          <a href="#" class="nav-link" @click="closeMenuIfMobile">Pet Profiles</a>
+          <div class="dropdown" :class="{ 'mobile-submenu-open': isMobile && dropdownOpen }">
+            <a href="#" class="nav-link dropdown-toggle" @click="toggleDropdown">
+              Resources <span class="dropdown-arrow" :class="{ 'arrow-rotated': dropdownOpen }">▼</span>
+            </a>
+            <transition name="slide-fade">
+              <div v-if="isMobile && dropdownOpen" class="dropdown-content mobile">
+                <a href="#" @click="closeMenuIfMobile">Training Tips</a>
+                <a href="#" @click="closeMenuIfMobile">Health Guides</a>
+              </div>
+            </transition>
+            <transition name="resources-dropdown">
+              <div v-if="!isMobile && desktopDropdownOpen" class="dropdown-content desktop">
                 <a href="#">Training Tips</a>
                 <a href="#">Health Guides</a>
                 <a href="#">Pet Care</a>
               </div>
-            </div>
-            <a href="#" class="nav-link" @click="closeMenuIfMobile">Donation</a>
-            <a href="#" class="nav-link" @click="closeMenuIfMobile">Contact</a>
+            </transition>
           </div>
-        </transition>
-      </div>
-      
-      <div class="right-section">
-        <div class="user-icon" role="button" aria-label="User profile" tabindex="0">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
+          <a href="#" class="nav-link" @click="closeMenuIfMobile">Donation</a>
+          <a href="#" class="nav-link" @click="closeMenuIfMobile">Contact</a>
         </div>
-        
+      </div>
+
+      <div class="right-section">
+        <div class="user-dropdown">
+          <div class="user-icon" ref="userIcon" role="button" aria-label="User profile" tabindex="0" @click="toggleUserDropdown">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+
+          <transition name="dropdown-animation">
+            <div v-if="userDropdownOpen" class="user-dropdown-content" :class="{ 'mobile-dropdown': isMobile }">
+              <div class="dropdown-header">
+                <span>User Menu</span>
+                <button class="close-dropdown-btn" @click="closeUserDropdown" aria-label="Close menu">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+              <a href="#" @click.stop>Profile</a>
+              <a href="#" @click.stop>Status</a>
+              <a href="#" @click.stop>Log Out</a>
+            </div>
+          </transition>
+        </div>
+
         <button class="mobile-menu-toggle" aria-label="Toggle menu" @click="toggleMobileMenu">
           <div class="bar" :class="{ 'bar-1-active': mobileMenuOpen }"></div>
           <div class="bar" :class="{ 'bar-2-active': mobileMenuOpen }"></div>
@@ -51,26 +70,24 @@
       </div>
     </nav>
 
-    <!-- Training Tips Content -->
     <div class="training-container">
       <div class="tab-container">
-        <button 
-          class="tab-button" 
-          :class="{ active: activeTab === 'cats' }" 
+        <button
+          class="tab-button"
+          :class="{ active: activeTab === 'cats' }"
           @click="activeTab = 'cats'"
         >
           <span class="emoji">🐱</span> Cat Training
         </button>
-        <button 
-          class="tab-button" 
-          :class="{ active: activeTab === 'dogs' }" 
+        <button
+          class="tab-button"
+          :class="{ active: activeTab === 'dogs' }"
           @click="activeTab = 'dogs'"
         >
           <span class="emoji">🐶</span> Dog Training
         </button>
       </div>
 
-      <!-- Cat Training Section -->
       <div v-if="activeTab === 'cats'" class="training-content">
         <div class="pet-header">
           <h1>🐱 Training Tips for Cats</h1>
@@ -78,7 +95,7 @@
 
         <div class="age-section">
           <h2>🐾 Kittens (8 weeks – 1 year)</h2>
-          
+
           <div class="tip-card">
             <h3>1. Litter Box Training</h3>
             <ul>
@@ -117,7 +134,7 @@
 
         <div class="age-section">
           <h2>🐾 Adult and Senior Cats</h2>
-          
+
           <div class="tip-card">
             <h3>1. Reducing Stress</h3>
             <ul>
@@ -152,7 +169,6 @@
         </div>
       </div>
 
-      <!-- Dog Training Section -->
       <div v-if="activeTab === 'dogs'" class="training-content">
         <div class="pet-header">
           <h1>🐶 Training Tips for Dogs</h1>
@@ -160,7 +176,7 @@
 
         <div class="age-section">
           <h2>🐾 Puppies (8 weeks – 1 year)</h2>
-          
+
           <div class="tip-card">
             <h3>1. House Training (Potty)</h3>
             <ul>
@@ -200,7 +216,7 @@
 
         <div class="age-section">
           <h2>🐾 Adult and Senior Dogs</h2>
-          
+
           <div class="tip-card">
             <h3>1. Breaking Bad Habits</h3>
             <ul>
@@ -247,36 +263,35 @@
         </div>
       </div>
     </div>
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-column logo-column">
+          <img src="Designer.png" alt="Pawfect" width="40" height="40">
+          <span class="Footer-logo-text">PAWFECT</span>
+          <p class="footer-description">Helping paws find their forever home.</p>
+        </div>
+        <div class="footer-column">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Pet Profiles</a></li>
+            <li><a href="#">Resources</a></li>
+            <li><a href="#">Donate</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Contact</h4>
+          <p>Email: support@pawfect.com</p>
+          <p>Phone: +123 456 7890</p>
+          <p>Location: Gordon College, Olongapo</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 PawfectMatch, Inc. All rights reserved.</p>
+      </div>
+    </footer>
   </div>
-    <!-- Footer Section -->
-<footer class="footer">
-  <div class="footer-container">
-    <div class="footer-column logo-column">
-      <img src="Designer.png" alt="Pawfect" width="40" height="40">
-      <span class="Footer-logo-text">PAWFECT</span>
-      <p class="footer-description">Helping paws find their forever home.</p>
-    </div>
-    <div class="footer-column">
-      <h4>Quick Links</h4>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Pet Profiles</a></li>
-        <li><a href="#">Resources</a></li>
-        <li><a href="#">Donate</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </div>
-    <div class="footer-column">
-      <h4>Contact</h4>
-      <p>Email: support@pawfect.com</p>
-      <p>Phone: +123 456 7890</p>
-      <p>Location: Gordon College, Olongapo</p>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>&copy; 2025 PawfectMatch, Inc. All rights reserved.</p>
-  </div>
-</footer>
 </template>
 
 <script>
@@ -286,19 +301,23 @@ export default {
     return {
       mobileMenuOpen: false,
       dropdownOpen: false,
+      desktopDropdownOpen: false,
+      userDropdownOpen: false,
       isMobile: false,
       hasScrolled: false,
-      activeTab: 'cats' 
+      activeTab: 'cats'
     }
   },
   mounted() {
     this.checkScreenSize();
     window.addEventListener('resize', this.checkScreenSize);
     window.addEventListener('scroll', this.handleScroll);
+    document.addEventListener('click', this.closeDropdownsOnClickOutside);
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.checkScreenSize);
     window.removeEventListener('scroll', this.handleScroll);
+    document.removeEventListener('click', this.closeDropdownsOnClickOutside);
   },
   methods: {
     toggleMobileMenu() {
@@ -312,7 +331,16 @@ export default {
       if (this.isMobile) {
         event.preventDefault();
         this.dropdownOpen = !this.dropdownOpen;
+      } else {
+        this.desktopDropdownOpen = !this.desktopDropdownOpen;
       }
+    },
+    toggleUserDropdown(event) {
+      event.stopPropagation();
+      this.userDropdownOpen = !this.userDropdownOpen;
+    },
+    closeUserDropdown() {
+      this.userDropdownOpen = false;
     },
     closeMenuIfMobile() {
       if (this.isMobile) {
@@ -322,7 +350,7 @@ export default {
       }
     },
     checkScreenSize() {
-      this.isMobile = window.innerWidth <= 768;
+      this.isMobile = window.innerWidth <= 992; // Adjusted breakpoint to match CSS
       if (!this.isMobile) {
         this.mobileMenuOpen = false;
         this.dropdownOpen = false;
@@ -331,12 +359,22 @@ export default {
     },
     handleScroll() {
       this.hasScrolled = window.scrollY > 20;
+    },
+    closeDropdownsOnClickOutside(event) {
+      // Only close desktop dropdown if clicking outside
+      if (!this.isMobile && this.desktopDropdownOpen) {
+        const dropdown = document.querySelector('.dropdown');
+        if (dropdown && !dropdown.contains(event.target)) {
+          this.desktopDropdownOpen = false;
+        }
+      }
     }
   }
 }
 </script>
 
-<style >
+
+<style>
 * {
   box-sizing: border-box;
   margin: 0;
@@ -367,7 +405,6 @@ export default {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Logo Styles */
 .logo-container {
   display: flex;
   align-items: center;
@@ -399,17 +436,15 @@ export default {
 }
 
 .nav-links-container {
-  flex: 1; 
+  flex: 1;
   display: flex;
   justify-content: center;
 }
 
-/* Navigation Links List */
 .nav-links {
   display: flex;
   gap: 2rem;
   align-items: center;
-  list-style: none; 
 }
 
 .nav-link {
@@ -437,7 +472,6 @@ export default {
   width: 100%;
 }
 
-/* Dropdown Styles */
 .dropdown {
   position: relative;
 }
@@ -449,11 +483,11 @@ export default {
   transition: transform 0.3s ease;
 }
 
-.arrow-rotated { 
+.arrow-rotated {
   transform: rotate(180deg);
 }
 
-.dropdown-content { 
+.dropdown-content {
   min-width: 180px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -462,28 +496,22 @@ export default {
 }
 
 .dropdown-content.desktop {
-  display: none; 
   position: absolute;
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
   margin-top: 0.75rem;
   background-color: white;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-  visibility: hidden;
+  z-index: 1001;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
 }
 
-.dropdown:hover .dropdown-content.desktop {
-  display: block;
-  opacity: 1;
-  pointer-events: auto;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0); 
+.dropdown-content.desktop-active {
+  animation: dropdownIn 0.3s ease-out forwards;
 }
 
-.dropdown-content a { 
+.dropdown-content a {
   padding: 0.75rem 1rem;
   text-decoration: none;
   display: block;
@@ -501,28 +529,14 @@ export default {
 }
 
 .dropdown-content.mobile {
-  
-  display: none;
-  background-color: rgba(255, 255, 255, 0.1); 
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  margin-top: 0.5rem; 
-  padding-left: 1rem;
-  box-shadow: none; 
-  max-height: 0; 
-  overflow: hidden;
-  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-}
-
-.dropdown.mobile-submenu-open .dropdown-content.mobile {
-  display: block; 
-  max-height: 300px; 
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .dropdown-content.mobile a {
   color: white;
-  padding: 0.75rem 1.5rem; /* Full width tappable area */
+  padding: 0.75rem 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -534,6 +548,10 @@ export default {
   display: flex;
   align-items: center;
   gap: 1.5rem;
+}
+
+.user-dropdown {
+  position: relative;
 }
 
 .user-icon {
@@ -554,6 +572,146 @@ export default {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
+.user-dropdown-content {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background-color: white;
+  min-width: 220px;
+  max-width: 90vw;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 1001;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dropdown-header span {
+  font-weight: 600;
+  color: #333;
+}
+
+.close-dropdown-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.close-dropdown-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+.user-dropdown-content a {
+  color: #333;
+  padding: 0.9rem 1.2rem;
+  text-decoration: none;
+  display: block;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.user-dropdown-content a:last-child {
+  border-bottom: none;
+}
+
+.user-dropdown-content a:hover {
+  background-color: #f8f8f8;
+  padding-left: 1.5rem;
+}
+
+/* Removed positioning changes for mobile */
+.user-dropdown-content.mobile-dropdown {
+  position: absolute;
+  width: auto;
+  min-width: 220px;
+  max-width: 90vw;
+}
+
+.dropdown-animation-enter-active {
+  animation: dropdownIn 0.3s ease-out forwards;
+}
+
+.dropdown-animation-leave-active {
+  animation: dropdownOut 0.3s ease-in forwards;
+}
+
+@keyframes dropdownIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdownOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.resources-dropdown-enter-active {
+  animation: dropdownResourcesIn 0.3s ease-out forwards;
+}
+
+.resources-dropdown-leave-active {
+  animation: dropdownResourcesOut 0.3s ease-in forwards;
+}
+
+@keyframes dropdownResourcesIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) translateX(-50%);
+  }
+  60% {
+    transform: translateY(5px) translateX(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+}
+
+@keyframes dropdownResourcesOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) translateX(-50%);
+  }
+}
+
 .mobile-menu-toggle {
   display: none;
   flex-direction: column;
@@ -564,7 +722,7 @@ export default {
   border: none;
   cursor: pointer;
   padding: 0;
-  z-index: 1001; 
+  z-index: 10;
 }
 
 .bar {
@@ -575,40 +733,48 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 
-.mobile-menu-toggle.active .bar-1 {
-  transform: translateY(8.5px) rotate(45deg); 
+.bar-1-active {
+  transform: translateY(8px) rotate(45deg);
 }
-.mobile-menu-toggle.active .bar-2 {
+
+.bar-2-active {
   opacity: 0;
 }
-.mobile-menu-toggle.active .bar-3 {
-  transform: translateY(-8.5px) rotate(-45deg);
+
+.bar-3-active {
+  transform: translateY(-8px) rotate(-45deg);
 }
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s ease;
 }
+
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
 }
+
 .slide-fade-enter-active, .slide-fade-leave-active {
   transition: all 0.3s ease;
 }
+
 .slide-fade-enter-from, .slide-fade-leave-to {
   transform: translateY(-20px);
   opacity: 0;
 }
 
+/* Training content styles */
 .training-container {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1.5rem;
   animation: fadeIn 0.8s ease-in;
 }
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
 .tab-container {
   display: flex;
   justify-content: center;
@@ -616,6 +782,7 @@ export default {
   margin-bottom: 2rem;
   flex-wrap: wrap;
 }
+
 .tab-button {
   padding: 0.75rem 1.5rem;
   background-color: #f5f5f5;
@@ -630,23 +797,28 @@ export default {
   gap: 0.5rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
+
 .tab-button.active {
   background-color: #F9A826;
   color: white;
   box-shadow: 0 4px 15px rgba(249, 168, 38, 0.4);
   transform: scale(1.05);
 }
+
 .tab-button:hover:not(.active) {
   background-color: #ececec;
   transform: translateY(-2px);
 }
+
 .emoji {
   font-size: 1.3rem;
 }
+
 .pet-header {
   text-align: center;
   margin-bottom: 2rem;
 }
+
 .pet-header h1 {
   font-size: 2.5rem;
   color: #333;
