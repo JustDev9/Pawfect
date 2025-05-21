@@ -432,7 +432,7 @@ export default {
         // 4. Care & Commitment
         petSleepLocation: '',
         petFood: '',
-        preparedForFinancialResponsibility: false,
+        preparedForFinancialResponsibility: '',
 
         // 5. Emergency & Long-Term Planning
         emergencyPetCaregiver: '',
