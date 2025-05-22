@@ -1,169 +1,211 @@
 <template>
-  <div>
-    <nav class="nav-container" :class="{ 'nav-scrolled': hasScrolled }">
-      <div class="logo-container">
-        <div class="logo-image">
-          <img src="Designer.png" alt="Pawfect" width="40" height="40">
-        </div>
-        <span class="logo-text">PAWFECT</span>
+  <nav class="nav-container" :class="{ 'nav-scrolled': hasScrolled }">
+    <div class="logo-container">
+      <div class="logo-image">
+        <img src="Designer.png" alt="Pawfect" width="40" height="40">
       </div>
-      
-      <div class="nav-links-container">
-        <transition name="fade">
-          <div v-if="mobileMenuOpen || !isMobile" class="nav-links" :class="{ 'mobile-active': mobileMenuOpen }">
-            <a href="#" class="nav-link" @click="closeMenuIfMobile">Home</a>
-            <a href="#" class="nav-link" @click="closeMenuIfMobile">Pet Profiles</a>
-            <div class="dropdown">
-              <a href="#" class="nav-link dropdown-toggle" @click="toggleDesktopDropdown">
-                Resources <span class="dropdown-arrow" :class="{ 'arrow-rotated': dropdownOpen }">▼</span>
-              </a>
-              <transition name="slide-fade">
-                <div v-if="isMobile && dropdownOpen" class="dropdown-content mobile">
-                  <a href="#" @click="closeMenuIfMobile">Training Tips</a>
-                  <a href="#" @click="closeMenuIfMobile">Health Guides</a>
-                </div>
-              </transition>
-              <transition name="resources-dropdown">
-                <div v-if="!isMobile && desktopDropdownOpen" class="dropdown-content desktop">
-                  <a href="#">Training Tips</a>
-                  <a href="#">Health Guides</a>
-                  <a href="#">Pet Care</a>
-                </div>
-              </transition>
+      <span class="logo-text">PAWFECT</span>
+    </div>
+
+    <div class="nav-links-container">
+      <transition name="fade">
+        <div v-if="mobileMenuOpen || !isMobile" class="nav-links" :class="{ 'mobile-active': mobileMenuOpen }">
+          <a href="#" class="nav-link" @click="closeMenuIfMobile">Home</a>
+          <a href="#" class="nav-link" @click="closeMenuIfMobile">Pet Profiles</a>
+          <div class="dropdown">
+            <a href="#" class="nav-link dropdown-toggle" @click="toggleDesktopDropdown">
+              Resources <span class="dropdown-arrow" :class="{ 'arrow-rotated': (isMobile ? dropdownOpen : desktopDropdownOpen) }">▼</span>
+            </a>
+            <transition name="slide-fade">
+              <div v-if="isMobile && dropdownOpen" class="dropdown-content mobile">
+                <a href="#" @click="closeMenuIfMobile">Training Tips</a>
+                <a href="#" @click="closeMenuIfMobile">Health Guides</a>
+              </div>
+            </transition>
+            <transition name="resources-dropdown">
+              <div v-if="!isMobile && desktopDropdownOpen" class="dropdown-content desktop">
+                <a href="#">Training Tips</a>
+                <a href="#">Health Guides</a>
+                <a href="#">Pet Care</a>
+              </div>
+            </transition>
+          </div>
+          <a href="#" class="nav-link" @click="closeMenuIfMobile">Donation</a>
+          <a href="#" class="nav-link" @click="closeMenuIfMobile">Contact</a>
+        </div>
+      </transition>
+    </div>
+
+    <div class="right-section">
+      <div class="user-dropdown">
+        <div class="user-icon" role="button" aria-label="User profile" tabindex="0" @click="toggleUserDropdown">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+
+        <transition name="dropdown-animation">
+          <div v-if="userDropdownOpen" class="user-dropdown-content" :class="{ 'mobile-dropdown': isMobile }">
+            <div class="dropdown-header">
+              <span>User Menu</span>
+              <button class="close-dropdown-btn" @click="closeUserDropdown" aria-label="Close menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
             </div>
-            <a href="#" class="nav-link" @click="closeMenuIfMobile">Donation</a>
-            <a href="#" class="nav-link" @click="closeMenuIfMobile">Contact</a>
+            <a href="#" @click.stop>Profile</a>
+            <a href="#" @click.stop>Status</a>
+            <a href="#" @click.stop>Log Out</a>
           </div>
         </transition>
       </div>
-      
-      <div class="right-section">
-        <div class="user-dropdown">
-          <div class="user-icon" role="button" aria-label="User profile" tabindex="0" @click="toggleUserDropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-          </div>
-          
-          <transition name="dropdown-animation">
-            <div v-if="userDropdownOpen" class="user-dropdown-content" :class="{ 'mobile-dropdown': isMobile }">
-              <div class="dropdown-header">
-                <span>User Menu</span>
-                <button class="close-dropdown-btn" @click="closeUserDropdown" aria-label="Close menu">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                </button>
-              </div>
-              <a href="#" @click.stop>Profile</a>
-              <a href="C:\Users\Ian\Desktop\login-sigup\src\components\Training.vue" @click.stop>Status</a>
-              <a href="#" @click.stop>Log Out</a>
-            </div>
-          </transition>
-        </div>
-        
-        <button class="mobile-menu-toggle" aria-label="Toggle menu" @click="toggleMobileMenu">
-          <div class="bar" :class="{ 'bar-1-active': mobileMenuOpen }"></div>
-          <div class="bar" :class="{ 'bar-2-active': mobileMenuOpen }"></div>
-          <div class="bar" :class="{ 'bar-3-active': mobileMenuOpen }"></div>
-        </button>
-      </div>
-    </nav>
-  </div>
+
+      <button class="mobile-menu-toggle" aria-label="Toggle menu" @click="toggleMobileMenu">
+        <div class="bar" :class="{ 'bar-1-active': mobileMenuOpen }"></div>
+        <div class="bar" :class="{ 'bar-2-active': mobileMenuOpen }"></div>
+        <div class="bar" :class="{ 'bar-3-active': mobileMenuOpen }"></div>
+      </button>
+    </div>
+  </nav>
 </template>
 
 <script>
 export default {
-  name: 'NavigationBar',
+  name: "NavigationBar",
   data() {
     return {
       mobileMenuOpen: false,
-      dropdownOpen: false,
-      desktopDropdownOpen: false,
+      dropdownOpen: false, // For mobile resources dropdown
+      desktopDropdownOpen: false, // For desktop resources dropdown
       userDropdownOpen: false,
       isMobile: false,
-      hasScrolled: false
-    }
+      hasScrolled: false,
+    };
   },
   mounted() {
     this.checkScreenSize();
-    window.addEventListener('resize', this.checkScreenSize);
-    window.addEventListener('scroll', this.handleScroll);
-    document.addEventListener('click', this.closeDropdownsOnClickOutside);
+    window.addEventListener("resize", this.checkScreenSize);
+    window.addEventListener("scroll", this.handleScroll);
+    // For click outside, we only want to close the resources dropdown, not the user menu.
+    document.addEventListener("click", this.closeResourceDropdownOnClickOutside);
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.checkScreenSize);
-    window.removeEventListener('scroll', this.handleScroll);
-    document.removeEventListener('click', this.closeDropdownsOnClickOutside);
+    window.removeEventListener("resize", this.checkScreenSize);
+    window.removeEventListener("scroll", this.handleScroll);
+    document.removeEventListener("click", this.closeResourceDropdownOnClickOutside);
   },
   methods: {
     toggleMobileMenu() {
       this.mobileMenuOpen = !this.mobileMenuOpen;
       if (!this.mobileMenuOpen) {
-        this.dropdownOpen = false;
+        this.dropdownOpen = false; // Close mobile resources dropdown if menu closes
       }
-      document.body.style.overflow = this.mobileMenuOpen ? 'hidden' : '';
-    },
-    toggleDropdown(event) {
-      if (this.isMobile) {
-        event.preventDefault();
-        this.dropdownOpen = !this.dropdownOpen;
+      if (this.mobileMenuOpen) {
+        document.body.classList.add('no-scroll');
+      } else {
+        document.body.classList.remove('no-scroll');
       }
     },
     toggleDesktopDropdown(event) {
       event.preventDefault();
       event.stopPropagation();
       if (this.isMobile) {
+        // Toggle mobile resources dropdown
         this.dropdownOpen = !this.dropdownOpen;
+        // Ensure other main dropdowns are managed if needed, but userDropdownOpen is independent now
+        this.desktopDropdownOpen = false; 
       } else {
+        // Toggle desktop resources dropdown
         this.desktopDropdownOpen = !this.desktopDropdownOpen;
       }
+      // NOTE: userDropdownOpen is NOT affected by this action anymore.
     },
     toggleUserDropdown(event) {
+      event.preventDefault();
       event.stopPropagation();
-      this.userDropdownOpen = !this.userDropdownOpen;
+      // If the user menu is not already open, open it.
+      // If it is already open, clicking the icon again does nothing to its state,
+      // as it can now only be closed by its 'X' button.
+      if (!this.userDropdownOpen) {
+        this.userDropdownOpen = true;
+      }
+      // When user dropdown is interacted with, ensure other (non-user) dropdowns are closed.
+      this.desktopDropdownOpen = false;
+      if (this.isMobile) {
+        this.dropdownOpen = false; // mobile resources dropdown
+      }
     },
     closeUserDropdown() {
+      // This is the only method that should set userDropdownOpen to false.
       this.userDropdownOpen = false;
     },
     closeMenuIfMobile() {
       if (this.isMobile) {
         this.mobileMenuOpen = false;
-        this.dropdownOpen = false;
-        document.body.style.overflow = '';
+        this.dropdownOpen = false; // Close mobile resources dropdown
+        document.body.classList.remove('no-scroll');
       }
+      // userDropdownOpen is not affected here.
+      // desktopDropdownOpen is not affected here by simple link clicks.
     },
     checkScreenSize() {
+      const previouslyMobile = this.isMobile;
       this.isMobile = window.innerWidth <= 768;
-      if (!this.isMobile) {
-        this.mobileMenuOpen = false;
-        this.dropdownOpen = false;
-        document.body.style.overflow = '';
+
+      if (previouslyMobile !== this.isMobile) { // Only run logic if mode actually changes
+        if (!this.isMobile) {
+          // Switched to Desktop
+          this.mobileMenuOpen = false;
+          this.dropdownOpen = false; // mobile resources dropdown
+          document.body.classList.remove('no-scroll');
+        } else {
+          // Switched to Mobile
+          this.desktopDropdownOpen = false;
+        }
       }
+      // userDropdownOpen is NOT affected by screen size changes.
     },
     handleScroll() {
       this.hasScrolled = window.scrollY > 20;
     },
-    closeDropdownsOnClickOutside(event) {
-      if (!this.isMobile && this.desktopDropdownOpen) {
-        const dropdown = document.querySelector('.dropdown');
-        if (dropdown && !dropdown.contains(event.target)) {
-          this.desktopDropdownOpen = false;
-        }
+    closeResourceDropdownOnClickOutside(event) {
+      // This function now ONLY handles closing the desktop resources dropdown.
+      // User dropdown is not affected by clicks outside.
+      const resourcesDropdownToggle = this.$el.querySelector('.nav-link.dropdown-toggle'); // Assuming this is specific enough
+      const resourcesDropdownContent = this.$el.querySelector('.dropdown-content.desktop');
+
+      if (this.desktopDropdownOpen && resourcesDropdownToggle && !resourcesDropdownToggle.contains(event.target) && resourcesDropdownContent && !resourcesDropdownContent.contains(event.target)) {
+        this.desktopDropdownOpen = false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
-* {
+/* Global Styles (combined from original script and style tag) */
+html {
   box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+body {
   margin: 0;
   padding: 0;
+  font-family: "Poppins", sans-serif; /* Added from original style */
+ /* overflow-x: hidden; Potentially remove if not strictly for navbar */
 }
+
+/* Added for mobile menu open state */
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* Styles relevant to the navigation bar */
 .nav-container {
   display: flex;
   justify-content: space-between;
@@ -238,6 +280,7 @@ export default {
   position: relative;
   padding: 0.5rem 0;
   transition: all 0.2s ease;
+  cursor: pointer; /* Added for better UX */
 }
 
 .nav-link:after {
@@ -285,13 +328,13 @@ export default {
   transform: translateX(-50%);
   margin-top: 0.75rem;
   background-color: white;
-  z-index: 1001;
+  z-index: 1001; /* Ensure it's above nav-scrolled backdrop */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
 }
 
-.dropdown-content.desktop-active {
-  animation: dropdownIn 0.3s ease-out forwards;
+.dropdown-content.desktop-active { /* This class was in original CSS but not used by a transition prop */
+  animation: dropdownIn 0.3s ease-out forwards; /* Kept if needed, but transition component is used */
 }
 
 .dropdown-content a {
@@ -299,6 +342,7 @@ export default {
   text-decoration: none;
   display: block;
   transition: all 0.2s ease;
+  cursor: pointer; /* Added for better UX */
 }
 
 .dropdown-content.desktop a {
@@ -312,14 +356,15 @@ export default {
 }
 
 .dropdown-content.mobile {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1); /* Adjusted for visibility in mobile menu */
   border-radius: 8px;
   margin-top: 0.5rem;
+  /* For mobile, position relative to parent in flow */
 }
 
 .dropdown-content.mobile a {
   color: white;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1.5rem; /* Increased padding for mobile tap */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -365,7 +410,7 @@ export default {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   border-radius: 12px;
   overflow: hidden;
-  z-index: 1001;
+  z-index: 1001; /* Ensure it's above nav-scrolled backdrop */
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
@@ -421,82 +466,54 @@ export default {
   padding-left: 1.5rem;
 }
 
-/* Removed positioning changes for mobile */
 .user-dropdown-content.mobile-dropdown {
-  position: absolute;
-  width: auto;
-  min-width: 220px;
-  max-width: 90vw;
+  /* This class was present, but its specific styling might need review
+     if it's meant to drastically change layout on mobile beyond just being a user dropdown.
+     Current behavior for mobile is handled by isMobile checks in template/script.
+     If it's for fine-tuning the dropdown's position/size on mobile when opened via user icon: */
+  position: absolute; /* already set */
+  width: auto; /* already default */
+  min-width: 220px; /* already set */
+  max-width: 90vw; /* already set */
 }
 
+
+/* Animations for dropdowns */
 .dropdown-animation-enter-active {
   animation: dropdownIn 0.3s ease-out forwards;
 }
-
 .dropdown-animation-leave-active {
   animation: dropdownOut 0.3s ease-in forwards;
 }
-
 @keyframes dropdownIn {
-  0% {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(5px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(-10px); }
+  60% { transform: translateY(5px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes dropdownOut {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
 }
 
 .resources-dropdown-enter-active {
   animation: dropdownResourcesIn 0.3s ease-out forwards;
 }
-
 .resources-dropdown-leave-active {
   animation: dropdownResourcesOut 0.3s ease-in forwards;
 }
-
 @keyframes dropdownResourcesIn {
-  0% {
-    opacity: 0;
-    transform: translateY(-10px) translateX(-50%);
-  }
-  60% {
-    transform: translateY(5px) translateX(-50%);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) translateX(-50%);
-  }
+  0% { opacity: 0; transform: translateY(-10px) translateX(-50%); }
+  60% { transform: translateY(5px) translateX(-50%); }
+  100% { opacity: 1; transform: translateY(0) translateX(-50%); }
+}
+@keyframes dropdownResourcesOut {
+  0% { opacity: 1; transform: translateY(0) translateX(-50%); }
+  100% { opacity: 0; transform: translateY(-10px) translateX(-50%); }
 }
 
-@keyframes dropdownResourcesOut {
-  0% {
-    opacity: 1;
-    transform: translateY(0) translateX(-50%);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-10px) translateX(-50%);
-  }
-}
 
 .mobile-menu-toggle {
-  display: none;
+  display: none; /* Hidden by default, shown in media query */
   flex-direction: column;
   justify-content: space-between;
   width: 28px;
@@ -505,7 +522,7 @@ export default {
   border: none;
   cursor: pointer;
   padding: 0;
-  z-index: 10;
+  z-index: 1005; /* Ensure it's above nav-links when they are fixed */
 }
 
 .bar {
@@ -515,23 +532,14 @@ export default {
   border-radius: 10px;
   transition: all 0.3s ease-in-out;
 }
+.bar-1-active { transform: translateY(8px) rotate(45deg); }
+.bar-2-active { opacity: 0; }
+.bar-3-active { transform: translateY(-8px) rotate(-45deg); }
 
-.bar-1-active {
-  transform: translateY(8px) rotate(45deg);
-}
-
-.bar-2-active {
-  opacity: 0;
-}
-
-.bar-3-active {
-  transform: translateY(-8px) rotate(-45deg);
-}
-
+/* Transitions for v-if nav-links and mobile dropdown */
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s ease;
 }
-
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
 }
@@ -539,12 +547,13 @@ export default {
 .slide-fade-enter-active, .slide-fade-leave-active {
   transition: all 0.3s ease;
 }
-
 .slide-fade-enter-from, .slide-fade-leave-to {
   transform: translateY(-20px);
   opacity: 0;
 }
 
+
+/* Media Queries */
 @media (max-width: 900px) {
   .nav-links {
     gap: 1.5rem;
@@ -555,19 +564,17 @@ export default {
   .nav-container {
     padding: 0.75rem 1.25rem;
   }
-  
   .logo-text {
     font-size: 1.5rem;
   }
-  
   .mobile-menu-toggle {
     display: flex;
   }
-  
   .nav-links-container {
-    position: static;
+    /* For mobile, nav-links take full screen, so container doesn't need to center. */
+    /* It can be removed or display: contents; if nav-links handles its own positioning */
+    position: static; 
   }
-  
   .nav-links {
     position: fixed;
     top: 0;
@@ -577,54 +584,47 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #F9A826;
+    background-color: #F9A826; /* Same as nav-container */
     padding: 2rem;
     gap: 1.5rem;
-    z-index: 5;
-    transition: all 0.3s ease;
+    z-index: 1000; /* Same as nav-container, burger is 1005 */
+    transition: transform 0.3s ease; /* Use transform for animation */
+    transform: translateX(100%); /* Start off-screen */
     overflow-y: auto;
-    padding-top: 5rem;
+    padding-top: 5rem; /* Space for logo/close button if they were part of this menu */
     width: 100vw;
     margin: 0;
   }
-  
-  .mobile-active {
-    animation: slideIn 0.3s forwards;
+  .nav-links.mobile-active {
+    transform: translateX(0); /* Slide in */
+    /* animation: slideIn 0.3s forwards; This was original, direct transform is often smoother */
   }
-  
   .nav-link {
     font-size: 1.3rem;
   }
-  
   .nav-link:after {
     height: 3px;
   }
 }
 
-@keyframes slideIn {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
+/* Original slideIn animation if preferred over direct transform */
+/* @keyframes slideIn {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(0); }
+} */
 
 @media (max-width: 480px) {
   .nav-container {
     padding: 0.75rem 1rem;
   }
-  
   .logo-text {
     font-size: 1.3rem;
   }
-  
   .user-icon {
     width: 32px;
     height: 32px;
   }
-  
-  .nav-links {
+  .nav-links.mobile-active { /* Ensure nav-links refers to .mobile-active state */
     padding: 1.5rem;
     gap: 1.25rem;
   }
@@ -634,15 +634,12 @@ export default {
   .nav-container {
     padding: 0.75rem 0.5rem;
   }
-  
   .logo-text {
     font-size: 1.1rem;
   }
-  
   .right-section {
     gap: 0.75rem;
   }
-  
   .user-dropdown-content {
     min-width: 200px;
   }
@@ -652,19 +649,37 @@ export default {
   .logo-text {
     font-size: 0.9rem;
   }
-  
   .user-icon {
     width: 28px;
     height: 28px;
   }
-  
   .nav-container {
     padding: 0.5rem 0.25rem;
   }
-  
   .user-dropdown-content {
     min-width: 180px;
-    right: -20px; 
+    right: -20px; /* Adjust if it overflows too much */
   }
+}
+
+/* Utility styles if needed by navbar - these were outside nav styles in original */
+.container { /* Not directly used by nav, but often global */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.btn { /* Not directly used by nav, but often global */
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #f7871f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+.btn:hover {
+  background-color: #f27508;
 }
 </style>
